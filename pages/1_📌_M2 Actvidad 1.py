@@ -99,7 +99,7 @@ st.dataframe(df_series)''', language="python")
 # 5️⃣ Consulta a SQLite
 st.subheader("📊 Datos desde SQLite")
 st.markdown("Se realizó una consulta a una base de datos SQLite para extraer información de estudiantes.")
-conn = sqlite3.connect("estudiantes.db")
+conn = sqlite3.connect("data/estudiantes.db")
 try:
     df_sqlite = pd.read_sql("SELECT * FROM estudiantes", conn)
     st.dataframe(df_sqlite)
@@ -108,7 +108,7 @@ except Exception as e:
     st.write(e)
 conn.close()
 
-st.code('''conn = sqlite3.connect("estudiantes.db")
+st.code('''conn = sqlite3.connect("data/estudiantes.db")
 df_sqlite = pd.read_sql("SELECT * FROM estudiantes", conn)
 st.dataframe(df_sqlite)
 conn.close()''', language="python")
@@ -116,25 +116,28 @@ conn.close()''', language="python")
 # 6️⃣ DataFrame desde un Archivo Excel
 st.subheader("📄 Datos desde Excel")
 st.markdown("Se cargó un DataFrame desde un archivo Excel (`data.xlsx`).")
-excel_filename = "data.xlsx"
+excel_filename = "data/data.xlsx"
 try:
     df_excel = pd.read_excel(excel_filename, engine="openpyxl")
     st.dataframe(df_excel)
 except FileNotFoundError:
     st.error(f"El archivo {excel_filename} no existe. Asegúrate de crearlo y guardarlo en el proyecto.")
 
-st.code('''df_excel = pd.read_excel("data.xlsx", engine="openpyxl")
+st.code('''df_excel = pd.read_excel("data/data.xlsx", engine="openpyxl")
 st.dataframe(df_excel)''', language="python")
 
 # 7️⃣ DataFrame desde un archivo JSON
 st.subheader("📄 Datos desde JSON")
 st.markdown("Se cargó un DataFrame desde un archivo JSON (`data.json`).")
-json_filename = "data.json"
+json_filename = "data/data.json"
 try:
     df_json = pd.read_json(json_filename)
     st.dataframe(df_json)
 except (FileNotFoundError, ValueError):
     st.error(f"El archivo {json_filename} no existe o está vacío.")
+
+st.code('''df_json = pd.read_json("data/data.json")
+st.dataframe(df_json)''', language="python")
 
 # 8️⃣ DataFrame desde una URL (Archivo CSV en línea)
 st.subheader("🌍 Datos desde URL (CSV en línea)")
