@@ -1,4 +1,6 @@
 import streamlit as st
+import pandas as pd 
+import io
 
 # Configuración de la página
 st.set_page_config(   
@@ -26,4 +28,52 @@ st.markdown("""
 """)
 
 st.header("Solución")
+
+# Título de la app
+st.title("Explorador de estudiantes - Colombia")
+
+# Carga del dataset
+df = pd.read_csv("data/estudiantes_colombia.csv")
+
+# Mostrar el dataframe completo
+st.subheader("Vista completa del dataset")
+st.dataframe(df)
+
+# Mostrar las primeras 5 filas
+st.header("Primeras 5 filas del dataframe")
+st.write(df.head())
+
+# Mostrar las últimas 5 filas
+st.header("Últimas 5 filas del dataframe")
+st.write(df.tail())
+
+# Mostrar resumen con info()
+st.header("Información del dataset")
+buffer = io.StringIO()
+df.info(buf=buffer)
+info_str = buffer.getvalue()
+st.text(info_str)
+
+# Mostrar estadísticas con describe()
+st.header("Estadísticas del dataset")
+st.write(df.describe())
+
+# Seleccionar columnas específicas
+st.header("Seleccionar columnas específicas")
+columnas = st.multiselect(
+    "Selecciona las columnas que quieres visualizar",
+    df.columns.tolist(),
+    default=["nombre", "edad", "promedio"] if all(col in df.columns for col in ["nombre", "edad", "promedio"]) else df.columns[:3]
+)
+st.write(df[columnas])
+
+# Filtro por promedio
+if "promedio" in df.columns:
+    st.header("Filtrar estudiantes por promedio")
+    valor_min, valor_max = float(df["promedio"].min()), float(df["promedio"].max())
+    promedio_min = st.slider("Mostrar estudiantes con promedio mayor a:", min_value=valor_min, max_value=valor_max, value=valor_min)
+    df_filtrado = df[df["promedio"] > promedio_min]
+    st.write(df_filtrado)
+else:
+    st.warning("La columna 'promedio' no está disponible en el dataset.")
 
